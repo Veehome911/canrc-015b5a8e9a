@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Missions - Canadian Reformed Churches</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #333;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    a {
+      color: #4a9e8e;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Header */
+    header {
+      background-color: #3b3f7a;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 90px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .logo svg {
+      display: block;
+      max-width: 100%;
+      height: 56px;
+      fill: #fff;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      padding: 6px 12px;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .search-box svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.6);
+      stroke-width: 2;
+    }
+
+    .search-box .shortcut {
+      font-size: 12px;
+      margin-left: 20px;
+      opacity: 0.6;
+    }
+
+    /* Hero Carousel */
+    .hero {
+      position: relative;
+      height: 420px;
+      overflow: hidden;
+    }
+
+    .hero-slides {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(59, 63, 122, 0.65) 0%,
+        rgba(26, 26, 46, 0.75) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 40px;
+      color: #fff;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-quote {
+      font-size: 22px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .hero-cta-text {
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 20px;
+    }
+
+    .hero-btn {
+      display: inline-block;
+      padding: 10px 24px;
+      background: #fff;
+      color: #3b3f7a;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+      align-self: flex-start;
+    }
+
+    .hero-btn:hover {
+      background: #e8e8f0;
+      text-decoration: none;
+      color: #3b3f7a;
+    }
+
+    .page-header {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 50px 40px 0;
+    }
+
+    .breadcrumb {
+      color: #c0392b;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .page-title {
+      font-size: 64px;
+      font-weight: 800;
+      color: #1a1a2e;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .page-intro {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #555;
+      max-width: 720px;
+      margin-bottom: 0;
+    }
+
+
+    .hero-dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      gap: 8px;
+    }
+
+    .hero-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      padding: 0;
+    }
+
+    .hero-dot.active {
+      background: #fff;
+    }
+
+    /* Main Content */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 40px 80px;
+    }
+
+    h2 {
+      font-size: 34px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-top: 50px;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    h2:first-child {
+      margin-top: 0;
+    }
+
+    p {
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-top: 30px;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    ul, ol {
+      margin: 0 0 20px 24px;
+      color: #444;
+    }
+
+    ul li, ol li {
+      margin-bottom: 6px;
+    }
+
+    ol li {
+      margin-bottom: 10px;
+    }
+
+    .section-btn {
+      display: inline-block;
+      padding: 10px 24px;
+      background: #3b3f7a;
+      color: #fff;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 10px;
+    }
+
+    .section-btn:hover {
+      background: #2e3163;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #3b3f7a;
+      color: #fff;
+      padding: 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 80px;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-col a {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .footer-col a:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+
+    .footer-right {
+      text-align: right;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.7;
+    }
+
+    .footer-right a {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .footer-right a:hover {
+      color: #fff;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        padding: 0 20px;
+        flex-wrap: wrap;
+        height: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        gap: 15px;
+      }
+
+      nav {
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .search-box {
+        display: none;
+      }
+
+      .hero {
+        height: 280px;
+      }
+
+      .page-header {
+        padding: 30px 20px 0;
+      }
+
+      .page-title {
+        font-size: 40px;
+      }
+
+      .page-intro {
+        font-size: 16px;
+      }
+
+      main {
+        padding: 30px 20px 60px;
+      }
+
+      h2 {
+        font-size: 26px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .footer-links {
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+
+      .footer-right {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="/" class="logo">
+      <svg class="fill-white block max-w-full" width="300" height="56" viewBox="0 0 344 64">
+        <path d="M115.945 18.711c0-5.103 3.267-8.559 7.533-8.559 3.753 0 6.129 2.16 6.75 5.481h-2.754c-.648-1.755-1.782-2.943-3.996-2.943-2.916 0-4.698 2.538-4.698 6.021 0 3.456 1.755 6.021 4.698 6.021 2.214 0 3.348-1.188 3.996-2.97h2.754c-.621 3.348-3.024 5.508-6.75 5.508-4.266 0-7.533-3.456-7.533-8.559zM142.027 27h-2.565v-.675c-.405.405-1.62.891-2.97.891-2.457 0-4.482-1.458-4.482-3.915 0-2.268 2.025-3.861 4.671-3.861 1.08 0 2.295.378 2.781.729v-.972c0-1.215-.756-2.16-2.295-2.16-1.08 0-1.755.459-2.052 1.296h-2.592c.351-2.052 2.241-3.591 4.698-3.591 3.024 0 4.806 1.674 4.806 4.401V27zm-2.565-3.186v-.999c-.297-.756-1.377-1.215-2.457-1.215-1.215 0-2.484.513-2.484 1.701 0 1.215 1.269 1.728 2.484 1.728 1.08 0 2.16-.459 2.457-1.215zM145.213 27V15.012h2.7v1.134c.648-.756 1.836-1.404 3.24-1.404 2.727 0 4.239 1.809 4.239 4.455V27h-2.7v-7.344c0-1.485-.729-2.457-2.268-2.457-1.161 0-2.214.729-2.511 1.917V27h-2.7zm22.599 0h-2.565v-.675c-.405.405-1.62.891-2.97.891-2.457 0-4.482-1.458-4.482-3.915 0-2.268 2.025-3.861 4.671-3.861 1.08 0 2.295.378 2.781.729v-.972c0-1.215-.756-2.16-2.295-2.16-1.08 0-1.755.459-2.052 1.296h-2.592c.351-2.052 2.241-3.591 4.698-3.591 3.024 0 4.806 1.674 4.806 4.401V27zm-2.565-3.186v-.999c-.297-.756-1.377-1.215-2.457-1.215-1.215 0-2.484.513-2.484 1.701 0 1.215 1.269 1.728 2.484 1.728 1.08 0 2.16-.459 2.457-1.215zM178.774 27v-1.026c-.54.675-1.728 1.296-3.051 1.296-3.51 0-5.562-2.808-5.562-6.264 0-3.429 2.052-6.264 5.562-6.264 1.323 0 2.511.621 3.051 1.296V9.45h2.7V27h-2.7zm0-3.726v-4.536c-.459-.945-1.485-1.593-2.592-1.593-2.079 0-3.321 1.647-3.321 3.861 0 2.214 1.242 3.861 3.321 3.861 1.107 0 2.133-.648 2.592-1.593zm8.748-8.262V27h-2.7V15.012h2.7zm.324-3.618c0 .918-.783 1.647-1.674 1.647-.891 0-1.674-.729-1.674-1.647s.783-1.647 1.674-1.647c.891 0 1.674.729 1.674 1.647zM200.104 27h-2.565v-.675c-.405.405-1.62.891-2.97.891-2.457 0-4.482-1.458-4.482-3.915 0-2.268 2.025-3.861 4.671-3.861 1.08 0 2.295.378 2.781.729v-.972c0-1.215-.756-2.16-2.295-2.16-1.08 0-1.755.459-2.052 1.296H190.6c.351-2.052 2.241-3.591 4.698-3.591 3.024 0 4.806 1.674 4.806 4.401V27zm-2.565-3.186v-.999c-.297-.756-1.377-1.215-2.457-1.215-1.215 0-2.484.513-2.484 1.701 0 1.215 1.269 1.728 2.484 1.728 1.08 0 2.16-.459 2.457-1.215zM203.29 27V15.012h2.7v1.134c.648-.756 1.836-1.404 3.24-1.404 2.727 0 4.239 1.809 4.239 4.455V27h-2.7v-7.344c0-1.485-.729-2.457-2.268-2.457-1.161 0-2.214.729-2.511 1.917V27h-2.7zm29.646-12.825h-2.673c0-.972-.621-1.89-1.863-1.89-1.161 0-2.16.783-2.16 2.079 0 1.08.756 1.89 1.566 2.754l4.158 4.455c.324-.891.486-1.89.54-2.997h2.484c-.054 1.701-.486 3.402-1.296 4.833L237.04 27h-3.51l-1.458-1.512a6.528 6.528 0 0 1-4.536 1.782c-3.267 0-5.508-2.133-5.508-5.13 0-1.917 1.188-3.537 2.862-4.428-.783-.972-1.242-1.944-1.242-3.267 0-2.673 2.052-4.293 4.752-4.293 2.943 0 4.536 1.836 4.536 4.023zm-5.4 10.881c1.242 0 2.268-.432 3.051-1.188l-4.239-4.509c-1.053.459-1.782 1.539-1.782 2.781 0 1.728 1.161 2.916 2.97 2.916zm22.653-14.634h2.7L259.261 27h-2.862l-1.701-4.59h-6.345L246.652 27h-2.835l6.372-16.578zm1.323 3.429l-2.268 6.129h4.536l-2.268-6.129zm18.819 2.484c.837-.972 1.944-1.593 3.564-1.593 2.457 0 3.888 1.728 3.888 4.455V27h-2.7v-7.371c0-1.485-.648-2.457-1.971-2.457-.972 0-1.89.594-2.133 1.782V27h-2.7v-7.371c0-1.485-.648-2.457-1.971-2.457-.972 0-1.89.594-2.133 1.782V27h-2.7V15.012h2.7v.999c.567-.756 1.647-1.269 2.997-1.269 1.35 0 2.538.675 3.159 1.593zm18.036 6.939h2.484c-.405 2.376-2.16 3.996-5.049 3.996-3.348 0-5.67-2.538-5.67-6.237 0-3.591 2.349-6.291 5.616-6.291 3.375 0 5.211 2.403 5.211 5.913v.972h-8.181c.081 2.106 1.296 3.375 3.024 3.375 1.296 0 2.268-.567 2.565-1.728zm-2.592-6.264c-1.485 0-2.592.918-2.916 2.646h5.427c-.027-1.458-.864-2.646-2.511-2.646zm14.364-2.052v2.781c-.378-.27-1.026-.405-1.593-.405-1.107 0-2.133.621-2.403 1.917V27h-2.7V15.012h2.7v1.242c.459-.891 1.512-1.512 2.673-1.512.594 0 1.134.108 1.323.216zm5.184.054V27h-2.7V15.012h2.7zm.324-3.618c0 .918-.783 1.647-1.674 1.647-.891 0-1.674-.729-1.674-1.647s.783-1.647 1.674-1.647c.891 0 1.674.729 1.674 1.647zm2.187 9.612c0-3.726 2.349-6.264 5.589-6.264 2.862 0 4.671 1.62 5.022 4.023h-2.7c-.216-1.08-1.107-1.674-2.295-1.674-1.809 0-2.916 1.647-2.916 3.915s1.107 3.915 2.916 3.915c1.188 0 2.079-.594 2.295-1.674h2.7c-.351 2.403-2.16 4.023-5.022 4.023-3.24 0-5.589-2.538-5.589-6.264zM330.082 27h-2.565v-.675c-.405.405-1.62.891-2.97.891-2.457 0-4.482-1.458-4.482-3.915 0-2.268 2.025-3.861 4.671-3.861 1.08 0 2.295.378 2.781.729v-.972c0-1.215-.756-2.16-2.295-2.16-1.08 0-1.755.459-2.052 1.296h-2.592c.351-2.052 2.241-3.591 4.698-3.591 3.024 0 4.806 1.674 4.806 4.401V27zm-2.565-3.186v-.999c-.297-.756-1.377-1.215-2.457-1.215-1.215 0-2.484.513-2.484 1.701 0 1.215 1.269 1.728 2.484 1.728 1.08 0 2.16-.459 2.457-1.215zM333.268 27V15.012h2.7v1.134c.648-.756 1.836-1.404 3.24-1.404 2.727 0 4.239 1.809 4.239 4.455V27h-2.7v-7.344c0-1.485-.729-2.457-2.268-2.457-1.161 0-2.214.729-2.511 1.917V27h-2.7zM121.642 47.277h-1.998V54h-2.808V37.422h6.399c3.429 0 5.643 1.728 5.643 4.968 0 2.781-1.62 4.374-4.239 4.779L129.445 54h-3.186l-4.617-6.723zm-1.998-7.425v5.076h3.537c1.863 0 2.916-.999 2.916-2.538 0-1.539-1.053-2.538-2.916-2.538h-3.537zm19.278 10.422h2.484c-.405 2.376-2.16 3.996-5.049 3.996-3.348 0-5.67-2.538-5.67-6.237 0-3.591 2.349-6.291 5.616-6.291 3.375 0 5.211 2.403 5.211 5.913v.972h-8.181c.081 2.106 1.296 3.375 3.024 3.375 1.296 0 2.268-.567 2.565-1.728zm-2.592-6.264c-1.485 0-2.592.918-2.916 2.646h5.427c-.027-1.458-.864-2.646-2.511-2.646zm14.283-7.506v2.376c-.405-.27-.891-.378-1.323-.378-1.08 0-1.755.648-1.755 1.836v1.674h2.619v2.241h-2.619V54h-2.646v-9.747h-2.079v-2.241h2.079v-1.863c0-2.565 1.701-3.969 3.942-3.969.783 0 1.296.108 1.782.324zm12.231 11.502c0 3.672-2.322 6.264-5.697 6.264s-5.697-2.592-5.697-6.264 2.322-6.264 5.697-6.264 5.697 2.592 5.697 6.264zm-2.7 0c0-2.268-1.053-3.942-2.997-3.942s-2.997 1.674-2.997 3.942c0 2.268 1.053 3.942 2.997 3.942s2.997-1.674 2.997-3.942zm11.907-6.048v2.781c-.378-.27-1.026-.405-1.593-.405-1.107 0-2.133.621-2.403 1.917V54h-2.7V42.012h2.7v1.242c.459-.891 1.512-1.512 2.673-1.512.594 0 1.134.108 1.323.216zm11.34 1.377c.837-.972 1.944-1.593 3.564-1.593 2.457 0 3.888 1.728 3.888 4.455V54h-2.7v-7.371c0-1.485-.648-2.457-1.971-2.457-.972 0-1.89.594-2.133 1.782V54h-2.7v-7.371c0-1.485-.648-2.457-1.971-2.457-.972 0-1.89.594-2.133 1.782V54h-2.7V42.012h2.7v.999c.567-.756 1.647-1.269 2.997-1.269 1.35 0 2.538.675 3.159 1.593zm18.036 6.939h2.484c-.405 2.376-2.16 3.996-5.049 3.996-3.348 0-5.67-2.538-5.67-6.237 0-3.591 2.349-6.291 5.616-6.291 3.375 0 5.211 2.403 5.211 5.913v.972h-8.181c.081 2.106 1.296 3.375 3.024 3.375 1.296 0 2.268-.567 2.565-1.728zm-2.592-6.264c-1.485 0-2.592.918-2.916 2.646h5.427c-.027-1.458-.864-2.646-2.511-2.646zM214.36 54v-1.026c-.54.675-1.728 1.296-3.051 1.296-3.51 0-5.562-2.808-5.562-6.264 0-3.429 2.052-6.264 5.562-6.264 1.323 0 2.511.621 3.051 1.296V36.45h2.7V54h-2.7zm0-3.726v-4.536c-.459-.945-1.485-1.593-2.592-1.593-2.079 0-3.321 1.647-3.321 3.861 0 2.214 1.242 3.861 3.321 3.861 1.107 0 2.133-.648 2.592-1.593zm11.286-4.563c0-5.103 3.267-8.559 7.533-8.559 3.753 0 6.129 2.16 6.75 5.481h-2.754c-.648-1.755-1.782-2.943-3.996-2.943-2.916 0-4.698 2.538-4.698 6.021 0 3.456 1.755 6.021 4.698 6.021 2.214 0 3.348-1.188 3.996-2.97h2.754c-.621 3.348-3.024 5.508-6.75 5.508-4.266 0-7.533-3.456-7.533-8.559zM242.494 54V36.45h2.7v6.696c.648-.756 1.836-1.404 3.24-1.404 2.727 0 4.239 1.809 4.239 4.455V54h-2.7v-7.344c0-1.485-.729-2.457-2.268-2.457-1.161 0-2.214.729-2.511 1.917V54h-2.7zm23.328-11.988V54h-2.7v-1.134c-.648.756-1.809 1.404-3.213 1.404-2.727 0-4.212-1.809-4.212-4.455v-7.803h2.7v7.344c0 1.485.702 2.457 2.241 2.457 1.161 0 2.187-.729 2.484-1.917v-7.884h2.7zm10.044-.054v2.781c-.378-.27-1.026-.405-1.593-.405-1.107 0-2.133.621-2.403 1.917V54h-2.7V42.012h2.7v1.242c.459-.891 1.512-1.512 2.673-1.512.594 0 1.134.108 1.323.216zm1.242 6.048c0-3.726 2.349-6.264 5.589-6.264 2.862 0 4.671 1.62 5.022 4.023h-2.7c-.216-1.08-1.107-1.674-2.295-1.674-1.809 0-2.916 1.647-2.916 3.915s1.107 3.915 2.916 3.915c1.188 0 2.079-.594 2.295-1.674h2.7c-.351 2.403-2.16 4.023-5.022 4.023-3.24 0-5.589-2.538-5.589-6.264zM290.122 54V36.45h2.7v6.696c.648-.756 1.836-1.404 3.24-1.404 2.727 0 4.239 1.809 4.239 4.455V54h-2.7v-7.344c0-1.485-.729-2.457-2.268-2.457-1.161 0-2.214.729-2.511 1.917V54h-2.7zm20.763-3.726h2.484c-.405 2.376-2.16 3.996-5.049 3.996-3.348 0-5.67-2.538-5.67-6.237 0-3.591 2.349-6.291 5.616-6.291 3.375 0 5.211 2.403 5.211 5.913v.972h-8.181c.081 2.106 1.296 3.375 3.024 3.375 1.296 0 2.268-.567 2.565-1.728zm-2.592-6.264c-1.485 0-2.592.918-2.916 2.646h5.427c-.027-1.458-.864-2.646-2.511-2.646zm6.831 6.534h2.754c.297.999 1.188 1.512 2.376 1.512 1.242 0 2.052-.486 2.052-1.431 0-.648-.405-.999-1.404-1.242l-2.484-.594c-1.701-.405-2.97-1.323-2.97-3.294 0-2.16 1.917-3.753 4.536-3.753 2.808 0 4.401 1.35 4.806 3.537h-2.646c-.243-.783-.945-1.323-2.187-1.323-.945 0-1.917.432-1.917 1.377 0 .54.378.891 1.242 1.107l2.538.594c2.052.486 3.078 1.647 3.078 3.402 0 2.376-1.971 3.834-4.671 3.834-2.808 0-4.752-1.404-5.103-3.726z"></path>
+        <path opacity=".674" d="M74 2v25h12z"></path>
+        <path opacity=".949" d="M74 34v30h30L89.395 34zM66 0L39 27h27z"></path>
+        <path opacity=".668" d="M31.526 34L0 64h67V34z"></path>
+      </svg>
+    </a>
+    <nav>
+      <a href="/federation">Federation</a>
+      <a href="/churches">Churches</a>
+      <a href="/ministers">Ministers</a>
+      <a href="/assemblies">Assemblies</a>
+      <a href="/news">News</a>
+      <a href="/contact">Contact</a>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search
+        <span class="shortcut">&#8984;K</span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Carousel -->
+  <section class="hero">
+    <div class="hero-slides">
+      <div class="hero-slide active" style="background-image: url('PIctures/Brazil%20congregation.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('PIctures/worshiping%20PNG.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('PIctures/Children%20in%20Indonesia.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('PIctures/graduating%20class%20png.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('PIctures/Karen%20ministry.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('PIctures/Timor%20GRADUATION%202025.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('PIctures/high%20fives%20in%20south%20sudan.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('PIctures/Brazil%20baptism.jpg')"></div>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-quote"><strong>&ldquo;The harvest is plentiful, but the workers are few.&rdquo;</strong> - Matthew 9:37</p>
+      <p class="hero-cta-text"><strong>CHRIST</strong>&rsquo;s call is urgent - and <strong>YOU</strong> are part of it.</p>
+      <p class="hero-cta-text">Your prayers, support, and gifts matter in his mission.</p>
+      <a href="https://reformedmissions.net/" target="_blank" rel="noopener noreferrer" class="hero-btn">Click here to discover how <strong>YOU</strong> can get involved today &rarr;</a>
+    </div>
+    <div class="hero-dots"></div>
+  </section>
+
+  <!-- Page Title -->
+  <div class="page-header">
+    <div class="breadcrumb">Federation</div>
+    <h1 class="page-title">Missions</h1>
+    <p class="page-intro">The Canadian Reformed Churches believe that mission is not optional - it is an essential part of who we are as Christ&rsquo;s church. Christ, the risen Lord has entrusted his people with the gospel of the kingdom and commands us to proclaim it to the ends of the earth (Matthew 28:18&ndash;20; Acts 1:8).</p>
+    <p class="page-intro">On this page, you can learn what mission means in the Canadian Reformed Churches, how it is carried out, and how you can take part in Christ&rsquo;s ongoing work.</p>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+
+    <h2>What Is Mission?</h2>
+    <p>Mission is the joyful proclamation of the gospel of Jesus Christ. It calls people everywhere to repentance and faith and gathers them into his church.</p>
+    <p>Mission includes:</p>
+    <ul>
+      <li>Preaching and teaching the Word of God</li>
+      <li>Planting and nurturing churches</li>
+      <li>Training office-bearers</li>
+      <li>Helping believers grow to maturity in Christ (Ephesians 4:11&ndash;16)</li>
+    </ul>
+    <p>At its heart, mission is Christ himself gathering his chosen people by his Spirit and Word, as we confess in the Heidelberg Catechism (Lord&rsquo;s Day 21). The message we proclaim is reconciliation with God through the atoning death and resurrection of Jesus Christ (2 Corinthians 5:18&ndash;20).</p>
+
+    <h2>Who Carries Out Mission Work?</h2>
+    <p>Mission begins with Christ. He is the great Missionary sent by the Father and now continues his saving work from heaven through his Word and Spirit (John 20:21).</p>
+    <p>Christ carries out this work through his church. Mission is not an independent, para-ecclesiastical or private initiative - it belongs to the church as church. For that reason:</p>
+    <ul>
+      <li>Missionaries are ordained ministers of the gospel</li>
+      <li>Missionaries and mission workers serve under the oversight of a sending church</li>
+      <li>Congregations support them with prayer, encouragement, and financial gifts (Acts 13:1&ndash;3; Philippians 1:5)</li>
+    </ul>
+    <p>Mission is a shared calling. When a missionary or mission worker is sent, the whole church stands behind the work.</p>
+
+    <h2>When/Where Does Mission Take Place?</h2>
+    <p>Mission is the church&rsquo;s calling throughout the time between Christ&rsquo;s ascension and his return, for in this present age of grace he gathers his people from every nation (Acts 1:11; 2 Cor. 6:2), and until the Lord of the harvest brings the age to its close, the church continues to labour in hope.</p>
+    <p>Christ&rsquo;s command extends to &ldquo;all nations&rdquo; (Matthew 28:19). That means mission happens both abroad and close to home.</p>
+
+    <h3>Foreign Mission</h3>
+    <p>Canadian Reformed churches support mission work in a variety of international settings, including urban centres, rural communities, and developing regions.</p>
+    <p>This work may involve:</p>
+    <ul>
+      <li>Church planting</li>
+      <li>Theological training and leadership development</li>
+      <li>Working collaboratively with indigenous churches</li>
+      <li>Assisting young churches toward full institution</li>
+      <li>Supporting the advancement of Reformed biblical teaching and pastoral training through digital resources, theological education, preaching support, and accessible study materials</li>
+    </ul>
+
+    <h3>Domestic Mission</h3>
+    <p>Mission also takes place within North America, especially in growing cities and diverse communities. Domestic mission includes:</p>
+    <ul>
+      <li>Local evangelism and outreach</li>
+      <li>Ministry among immigrants, newcomers, and migrant workers</li>
+      <li>Establishing new congregations</li>
+      <li>Supporting evangelistic initiatives within local churches</li>
+    </ul>
+    <p>Whether abroad or at home, the goal is the same: to establish and nourish faithful churches that confess the name of Jesus Christ.</p>
+
+    <h2>Why Do We Do Mission?</h2>
+    <p>We engage in mission because:</p>
+    <ul>
+      <li>Christ commands it</li>
+      <li>Christ loves the nations</li>
+      <li>God&rsquo;s glory is at stake</li>
+    </ul>
+    <p>Mission is ultimately about worship. We proclaim Christ so that people from every tribe and tongue may glorify God for his mercy (Romans 15:8&ndash;12; Psalm 67).</p>
+    <p>Mission is also rooted in God&rsquo;s covenant promise to Abraham - that all the families of the earth would be blessed in him (Genesis 12:3). Through the spread of the gospel, that promise continues to unfold.</p>
+
+    <h2>How Is Mission Carried Out?</h2>
+    <p>Canadian Reformed mission practice is shaped by clear biblical principles.</p>
+
+    <h3>By the Word and Spirit</h3>
+    <p>The gospel is God&rsquo;s power for salvation (Romans 1:16). While different tools and methods may be used, the preaching and teaching of Scripture remain central. The Spirit alone gives growth (1 Corinthians 3:6&ndash;7).</p>
+
+    <h3>Through the Church&rsquo;s Official Ministry</h3>
+    <p>Missionaries are ordained and supervised by a sending church, often with the support of neighbouring congregations. This provides accountability, unity, and doctrinal faithfulness (Acts 14:26&ndash;27; 1 Timothy 4:14).</p>
+
+    <h3>With Cultural Humility</h3>
+    <p>Missionaries seek to understand local cultures without compromising biblical truth. The goal is not to export North American church culture, but to help establish and nurture faithful local churches rooted in Scripture and the Reformed confession (Acts 15; Revelation 7:9).</p>
+
+    <h3>Toward Local Leadership</h3>
+    <p>Following the apostolic pattern, missionaries work toward equipping and mentoring local leaders so that, under the oversight of the local church, qualified office-bearers may be recognized and ordained (Acts 14:23; Titus 1:5). The long-term aim is a mature, self-sustaining Reformed local church.</p>
+
+    <h3>In Dependence on Prayer</h3>
+    <p>Mission belongs to Christ. Its fruit depends entirely on his blessing. Congregations are therefore urged to uphold missionaries continually in prayer (2 Thessalonians 3:1).</p>
+
+    <h2>The Canadian Reformed Missions Association</h2>
+    <p>The Canadian Reformed Missions Association (CRMA) exists to connect and equip the mission work carried out by the Canadian Reformed Churches. It brings together churches involved in mission work - both at home and abroad - so they can share information, learn from one another, and work more effectively together.</p>
+    <p>The CRMA strengthens communication between mission works and congregations. It helps church members pray knowledgeably by maintaining a blog with missionary updates and by sending regular prayer updates to the churches.</p>
+    <p>In this way, the CRMA serves as a networking, communication, and support hub - encouraging missionaries in the field and strengthening the churches that send and support them.</p>
+    <a href="https://reformedmissions.net/" target="_blank" rel="noopener noreferrer" class="section-btn">Visit the CRMA Website for More Information &rarr;</a>
+
+    <h2>How Can You Be Involved?</h2>
+    <p>Mission is not only for those who are sent. Every believer has a role to play. You can:</p>
+    <ul>
+      <li>Pray regularly for missionaries and mission fields</li>
+      <li>Give generously to support the work</li>
+      <li>Encourage those serving abroad or at home</li>
+      <li>Consider whether the Lord may be calling you to serve in missions or mission support work</li>
+    </ul>
+    <p>As long as there are neighbours who do not know Christ - whether across the ocean or across the street - the calling remains urgent.</p>
+    <p>Trusting in the King who has all authority in heaven and on earth, we go forward in confidence that he will be with his church to the end of the age (Matthew 28:20).</p>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-links">
+        <div class="footer-col">
+          <a href="#">Beliefs</a>
+          <a href="#">Publications</a>
+          <a href="#">Government</a>
+        </div>
+        <div class="footer-col">
+          <a href="#">Worship</a>
+          <a href="#">Missions</a>
+          <a href="#">History</a>
+        </div>
+        <div class="footer-col">
+          <a href="#">Study</a>
+          <a href="#">Organizations</a>
+          <a href="#">Unity</a>
+        </div>
+      </div>
+      <div class="footer-right">
+        &copy; 2026 Committee for the Canadian Reformed Website.<br>
+        Website by <a href="#">Church Social</a> and <a href="#">Compass Creative</a>.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const slides = document.querySelectorAll('.hero-slide');
+      const dotsContainer = document.querySelector('.hero-dots');
+      let current = 0;
+      let interval;
+
+      // Create dots
+      slides.forEach(function(_, i) {
+        const dot = document.createElement('button');
+        dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        dot.addEventListener('click', function() {
+          goTo(i);
+          resetInterval();
+        });
+        dotsContainer.appendChild(dot);
+      });
+
+      var dots = document.querySelectorAll('.hero-dot');
+
+      function goTo(index) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = index;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+      }
+
+      function next() {
+        goTo((current + 1) % slides.length);
+      }
+
+      function resetInterval() {
+        clearInterval(interval);
+        interval = setInterval(next, 5000);
+      }
+
+      resetInterval();
+    })();
+  </script>
+
+</body>
+</html>
